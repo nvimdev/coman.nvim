@@ -20,14 +20,20 @@ local generate_line_comment = function(line, lnum, ctx)
 		new_lines = line:sub(1, char_idx - 1) .. line:sub(char_idx + #ctx.cms, -1)
 		api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { new_lines })
 	else
-		if ctx.in_head then
-			api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { ctx.cms .. line })
-			return
+		if ctx.follow_head then
+			if ctx.head_pos == 1 then
+				api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { ctx.cms .. line })
+				return
+			else
+				new_lines = line:sub(1, ctx.head_pos) .. ctx.cms .. line:sub(ctx.head_pos + 1)
+				api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { new_lines })
+				return
+			end
 		end
 
-		char_idx = line:find("%w")
+		_, char_idx = line:find("%s+")
 
-		new_lines = line:sub(1, char_idx - 1) .. ctx.cms .. line:sub(char_idx)
+		new_lines = line:sub(1, char_idx) .. ctx.cms .. line:sub(char_idx + 1)
 
 		api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { new_lines })
 	end
@@ -53,7 +59,7 @@ function coman:gen_comment(...)
 	end
 
 	local ctx = {
-		in_head = false,
+		follow_head = false,
 	}
 
 	ctx.cms, ctx.prefix = coman.get_cms_prefix()
@@ -62,7 +68,7 @@ function coman:gen_comment(...)
 		local lnum = api.nvim_win_get_cursor(0)[1]
 		local line = vim.fn.getline(".")
 		if not line:find("^%s") then
-			ctx.in_head = true
+			ctx.follow_head = true
 		end
 		generate_line_comment(line, lnum, ctx)
 	end
@@ -74,9 +80,19 @@ function coman:gen_comment(...)
 		local line_end, _ = vend[2], vend[3]
 		local lines = vim.fn.getline(line_start, line_end)
 
-		for _, v in pairs(lines) do
-			if not v:find("^%s") then
-				ctx.in_head = true
+		for i, v in pairs(lines) do
+			local next = i + 1 > #lines and #lines or i + 1
+			local _, cur_spaces = v:find("%s+")
+			if cur_spaces == nil then
+				ctx.follow_head = true
+				ctx.head_pos = 1
+				break
+			end
+
+			local _, next_spaces = lines[next]:find("%s+")
+			if cur_spaces < next_spaces then
+				ctx.follow_head = true
+				ctx.head_pos = cur_spaces
 				break
 			end
 		end

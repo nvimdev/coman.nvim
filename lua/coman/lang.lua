@@ -40,7 +40,7 @@ local function insert_annotation(contents)
 end
 
 local lang_with_func = {
-	go = function(tbl,cms)
+	go = function(tbl, cms)
 		local contents = {}
 		for _, v in pairs(tbl) do
 			-- go method is `(*struct)methodname`
@@ -58,9 +58,9 @@ local lang_with_func = {
 				end
 			end
 		end
-    return contents
+		return contents
 	end,
-	lua = function(tbl,cms)
+	lua = function(tbl, cms)
 		local contents = {}
 		for i, v in pairs(tbl) do
 			if i == 1 then
@@ -73,14 +73,14 @@ local lang_with_func = {
 		for i, v in pairs(contents) do
 			contents[i] = v .. string.rep(" ", max_length - #v)
 		end
-    return contents
+		return contents
 	end,
 }
 
 local lang = setmetatable(lang_with_func, {
 	__call = function(t, tbl)
 		local cms = gen_anno_cms()
-    local contents = t[vim.bo.filetype](tbl,cms)
+		local contents = t[vim.bo.filetype](tbl, cms)
 		insert_annotation(contents)
 	end,
 	__index = function(_, ft)
