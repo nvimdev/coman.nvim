@@ -69,6 +69,7 @@ function coman:gen_comment(...)
 		local line = vim.fn.getline(".")
 		if not line:find("^%s") then
 			ctx.follow_head = true
+      ctx.head_pos = 1
 		end
 		generate_line_comment(line, lnum, ctx)
 	end
