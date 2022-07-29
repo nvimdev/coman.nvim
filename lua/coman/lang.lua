@@ -28,11 +28,20 @@ local function get_max_length(tbl)
 	return max
 end
 
+local function insert_annotation(contents)
+	local current_line = api.nvim_win_get_cursor(0)[1]
+	local max_length = get_max_length(contents) + 2
+	for j, k in pairs(contents) do
+		contents[j] = k .. string.rep(" ", max_length - #k)
+	end
+	fn.append(current_line - 1, contents)
+	api.nvim_win_set_cursor(0, { current_line, max_length + 2 })
+	vim.cmd("startinsert!")
+end
+
 local lang_with_func = {
-	go = function(tbl)
-		local current_line = api.nvim_win_get_cursor(0)[1]
+	go = function(tbl,cms)
 		local contents = {}
-		local cms = gen_anno_cms()
 		for _, v in pairs(tbl) do
 			-- go method is `(*struct)methodname`
 			-- remmove the strcut just use method name
@@ -48,19 +57,10 @@ local lang_with_func = {
 					insert(contents, cms .. "@" .. vim.trim(param))
 				end
 			end
-
-			local max_length = get_max_length(contents) + 2
-			for j, k in pairs(contents) do
-				contents[j] = k .. string.rep(" ", max_length - #k)
-			end
-			fn.append(current_line - 1, contents)
-			api.nvim_win_set_cursor(0, { current_line, max_length + 2 })
-			vim.cmd("startinsert!")
 		end
+    return contents
 	end,
-	lua = function(tbl)
-		local current_line = api.nvim_win_get_cursor(0)[1]
-		local cms = gen_anno_cms()
+	lua = function(tbl,cms)
 		local contents = {}
 		for i, v in pairs(tbl) do
 			if i == 1 then
@@ -73,15 +73,15 @@ local lang_with_func = {
 		for i, v in pairs(contents) do
 			contents[i] = v .. string.rep(" ", max_length - #v)
 		end
-		fn.append(current_line - 1, contents)
-		api.nvim_win_set_cursor(0, { current_line, max_length + 2 })
-		vim.cmd("startinsert!")
+    return contents
 	end,
 }
 
 local lang = setmetatable(lang_with_func, {
 	__call = function(t, tbl)
-		t[vim.bo.filetype](tbl)
+		local cms = gen_anno_cms()
+    local contents = t[vim.bo.filetype](tbl,cms)
+		insert_annotation(contents)
 	end,
 	__index = function(_, ft)
 		vim.notify(string.format("current filetype %s not support yet create issue for it", ft))
