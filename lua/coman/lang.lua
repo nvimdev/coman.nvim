@@ -3,6 +3,8 @@ local get_cms_prefix = require("coman").get_cms_prefix
 local split = require("coman").split
 
 local prefix_plus = {
+  c = true,
+  cpp = true,
 	rust = true,
 	lua = true,
 }
