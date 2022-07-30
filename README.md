@@ -13,14 +13,14 @@ packer.use('glepnir/coman.nvim')
 comment use `commentstring`, so you can check the `commentstring` of your file.
 
 ```lua
-vim.keymap.set('n','gcc','ComComment',{noremap = true,silent = true})
-vim.keymap.set('x','gcc','ComComment',{noremap = true,silent = true})
+vim.keymap.set('n','gcc','<cmd>ComComment<cr>',{noremap = true,silent = true})
+vim.keymap.set('x','gcc',':ComComment<cr>',{noremap = true,silent = true})
 ```
 
 ## Annotation
 
 ```lua
-vim.keymap.set('n','gcj','ComAnnotation',{noremap = true,silent = true})
+vim.keymap.set('n','gcj','<cmd>ComAnnotation<Cr>',{noremap = true,silent = true})
 ```
 
 ## Show
