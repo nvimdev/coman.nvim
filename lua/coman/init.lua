@@ -17,7 +17,7 @@ local generate_line_comment = function(line, lnum, ctx)
 
 	if content[1] == ctx.prefix then
 		char_idx = line:find("%p")
-		new_lines = line:sub(1, char_idx - 1) .. line:sub(char_idx + #ctx.cms, -1)
+		new_lines = line:sub(1, char_idx - 1) .. line:sub(char_idx + #ctx.cms)
 		api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { new_lines })
 	else
 		if ctx.follow_head then
