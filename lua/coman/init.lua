@@ -83,14 +83,14 @@ function coman:gen_comment(...)
 
 		for i, v in pairs(lines) do
 			local next = i + 1 > #lines and #lines or i + 1
-			local _, cur_spaces = v:find("%s+")
+			local _, cur_spaces = v:find("^%s+")
 			if cur_spaces == nil then
 				ctx.follow_head = true
 				ctx.head_pos = 1
 				break
 			end
 
-			local _, next_spaces = lines[next]:find("%s+")
+			local _, next_spaces = lines[next]:find("^%s+")
 			if cur_spaces < next_spaces then
 				ctx.follow_head = true
 				ctx.head_pos = cur_spaces
