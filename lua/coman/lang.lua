@@ -39,7 +39,15 @@ local function insert_annotation(contents)
 	vim.cmd("startinsert!")
 end
 
+--- TODO: clangd miss the param name
+local c_family = function(tbl,cms)
+  local contents = {}
+  return contents
+end
+
 local lang_with_func = {
+  c = c_family,
+  cpp = c_family,
 	go = function(tbl, cms)
 		local contents = {}
 		for _, v in pairs(tbl) do
@@ -79,6 +87,7 @@ local lang_with_func = {
 
 local lang = setmetatable(lang_with_func, {
 	__call = function(t, tbl)
+    -- print(vim.inspect(tbl))
 		local cms = gen_anno_cms()
 		local contents = t[vim.bo.filetype](tbl, cms)
 		insert_annotation(contents)

@@ -82,24 +82,28 @@ function coman:gen_comment(...)
 		local lines = vim.fn.getline(line_start, line_end)
 
 		for i, v in pairs(lines) do
-			local next = i + 1 > #lines and #lines or i + 1
-			local _, cur_spaces = v:find("^%s+")
-			if cur_spaces == nil then
-				ctx.follow_head = true
-				ctx.head_pos = 1
-				break
-			end
+      if #v > 0 then
+        local next = i + 1 > #lines and #lines or i + 1
+        local _, cur_spaces = v:find("^%s+")
+        if cur_spaces == nil then
+          ctx.follow_head = true
+          ctx.head_pos = 1
+          break
+        end
 
-			local _, next_spaces = lines[next]:find("^%s+")
-			if cur_spaces < next_spaces then
-				ctx.follow_head = true
-				ctx.head_pos = cur_spaces
-				break
-			end
+        local _, next_spaces = lines[next]:find("^%s+")
+        if cur_spaces < next_spaces then
+          ctx.follow_head = true
+          ctx.head_pos = cur_spaces
+          break
+        end
+      end
 		end
 
 		for k, line in ipairs(lines) do
-			generate_line_comment(line, line_start + k - 1, ctx)
+      if string.len(line) ~= 0 then
+        generate_line_comment(line, line_start + k - 1, ctx)
+      end
 		end
 	end
 
