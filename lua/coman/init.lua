@@ -69,7 +69,7 @@ function coman:gen_comment(...)
 		local line = vim.fn.getline(".")
 		if not line:find("^%s") then
 			ctx.follow_head = true
-      ctx.head_pos = 1
+			ctx.head_pos = 1
 		end
 		generate_line_comment(line, lnum, ctx)
 	end
@@ -82,32 +82,32 @@ function coman:gen_comment(...)
 		local lines = vim.fn.getline(line_start, line_end)
 
 		for i, v in pairs(lines) do
-      if #v > 0 then
-        local _, cur_spaces = v:find("^%s+")
-        if cur_spaces == nil then
-          ctx.follow_head = true
-          ctx.head_pos = 1
-          break
-        end
+			if #v > 0 then
+				local _, cur_spaces = v:find("^%s+")
+				if cur_spaces == nil then
+					ctx.follow_head = true
+					ctx.head_pos = 1
+					break
+				end
 
-        local next = i + 1 > #lines and #lines or i + 1
-        if string.len(lines[next]) == 0 then
-          next = next + 1
-        end
-        local _, next_spaces = lines[next]:find("^%s+")
-        -- next_spaces = next_spaces == nil and 1 or next_spaces
-        if cur_spaces < next_spaces then
-          ctx.follow_head = true
-          ctx.head_pos = cur_spaces
-          break
-        end
-      end
+				local next = i + 1 > #lines and #lines or i + 1
+				if string.len(lines[next]) == 0 then
+					next = next + 1
+				end
+				local _, next_spaces = lines[next]:find("^%s+")
+				-- next_spaces = next_spaces == nil and 1 or next_spaces
+				if cur_spaces < next_spaces then
+					ctx.follow_head = true
+					ctx.head_pos = cur_spaces
+					break
+				end
+			end
 		end
 
 		for k, line in ipairs(lines) do
-      if string.len(line) ~= 0 then
-        generate_line_comment(line, line_start + k - 1, ctx)
-      end
+			if string.len(line) ~= 0 then
+				generate_line_comment(line, line_start + k - 1, ctx)
+			end
 		end
 	end
 
