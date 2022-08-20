@@ -1,14 +1,13 @@
 local api = vim.api
-local coman = require("coman")
-local anno = require("coman.anno")
+local coman = require('coman')
 
-api.nvim_create_user_command("ComComment", function(args)
-	coman:gen_comment(args.line1, args.line2)
+api.nvim_create_user_command('ComComment', function(args)
+  coman:gen_comment(args.line1, args.line2)
 end, {
-	range = true,
-	desc = "Coman.nvim comment command",
+  range = true,
+  desc = 'Coman.nvim comment command',
 })
 
-api.nvim_create_user_command("ComAnnotation", function()
-	anno:gen_annotation()
+api.nvim_create_user_command('ComAnnotation', function()
+  coman:gen_annotation()
 end, {})
