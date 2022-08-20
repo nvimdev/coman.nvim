@@ -5,6 +5,7 @@
 ## Install
 
 ```lua
+packer.use('nvim-treesitter/nvim-treesitter')
 packer.use('glepnir/coman.nvim')
 ```
 
@@ -24,6 +25,8 @@ vim.keymap.set('x','gcc',':ComComment<cr>',{noremap = true,silent = true})
 ```
 
 ## Annotation
+
+Annotation need `nvim-treesitter`
 
 ```lua
 vim.keymap.set('n','gcj','<cmd>ComAnnotation<Cr>',{noremap = true,silent = true})
