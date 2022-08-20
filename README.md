@@ -8,6 +8,12 @@
 packer.use('glepnir/coman.nvim')
 ```
 
+## Option
+
+```lua
+before_anno -- type function this function will run before generate Annotation
+```
+
 ## Comment
 
 comment use `commentstring`, so you can check the `commentstring` of your file.
