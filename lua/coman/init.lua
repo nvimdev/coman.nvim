@@ -46,7 +46,7 @@ function coman.get_cms_prefix()
   local cms = vim.bo.cms
   local prefix = ''
   if cms:find('%%s') then
-    cms = cms:gsub('%%s', ' ')
+    cms = cms:gsub('%%s', '')
     prefix = cms:gsub('%s', '')
     return cms, prefix
   end
