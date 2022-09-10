@@ -18,7 +18,7 @@ local generate_line_comment = function(line, lnum, ctx)
   local content = coman.split(line, '%S+')
   local new_lines, char_idx
 
-  if content[1] == ctx.prefix then
+  if content[1] == vim.split(ctx.cms, '%s')[1] then
     char_idx = line:find('%p')
     new_lines = line:sub(1, char_idx - 1) .. line:sub(char_idx + #ctx.cms)
     api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { new_lines })
@@ -44,13 +44,11 @@ end
 
 function coman.get_cms_prefix()
   local cms = vim.bo.cms
-  local prefix = ''
-  if cms:find('%%s') then
-    cms = cms:gsub('%%s', '')
-    prefix = cms:gsub('%s', '')
-    return cms, prefix
+  -- match te cms like space+%s
+  if cms:find('%%s$') then
+    cms = cms:find('%s') and cms:gsub('%%s', '') or cms:gsub('%%s', ' ')
   end
-  return cms, prefix
+  return cms
 end
 
 function coman:gen_comment(...)
@@ -65,7 +63,7 @@ function coman:gen_comment(...)
     follow_head = false,
   }
 
-  ctx.cms, ctx.prefix = coman.get_cms_prefix()
+  ctx.cms = coman.get_cms_prefix()
 
   self.normal_mode = function()
     local lnum = api.nvim_win_get_cursor(0)[1]
