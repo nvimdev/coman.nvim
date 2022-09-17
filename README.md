@@ -2,9 +2,12 @@
 <h1><p> Comment and Annotation </p></h1>
 </center>
 
+**Notice current only work with backend language**
+
 ## Install
 
 ```lua
+-- if you like to use annotation you need install treesitter
 packer.use('nvim-treesitter/nvim-treesitter')
 packer.use('glepnir/coman.nvim')
 ```
@@ -12,7 +15,7 @@ packer.use('glepnir/coman.nvim')
 ## Option
 
 ```lua
-before_anno -- type function this function will run before generate Annotation
+custom_template -- table custom the Annotation tempaltes.
 ```
 
 ## Comment
@@ -30,6 +33,19 @@ Annotation need `nvim-treesitter`
 
 ```lua
 vim.keymap.set('n','gcj','<cmd>ComAnnotation<Cr>',{noremap = true,silent = true})
+```
+
+- custom annotation tempaltes
+
+you can overwrite or custom the annotation tempaltes for your language.
+
+```lua
+local custom_template = require('coman').custom_template
+-- tbl is the function relate table. index 1 is function name
+-- others are params name with type (if have)
+custom_template['c'] = function(tbl, cms)
+  return {}
+end
 ```
 
 ## Show

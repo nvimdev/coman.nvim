@@ -12,7 +12,8 @@ local prefix_plus = {
 }
 
 local function gen_anno_cms()
-  local cms, prefix = get_cms_prefix()
+  local cms = get_cms_prefix()
+  local prefix = vim.split(cms,'%s')[1]
   if prefix_plus[vim.bo.filetype] then
     local tbl = split(prefix, '%p')
     cms = prefix .. tbl[1] .. ' '
@@ -41,7 +42,7 @@ local function insert_annotation(contents)
   vim.cmd('startinsert!')
 end
 
-local generate_anno_tmp = function(tbl, cms)
+local function generate_anno_tmp(tbl, cms)
   local contents = {}
 
   local before_hook = coman.before_anno
@@ -52,8 +53,9 @@ local generate_anno_tmp = function(tbl, cms)
   for i, v in pairs(tbl) do
     if i == 1 then
       insert(contents, cms .. space .. '@Description' .. space .. v)
+    else
+      insert(contents, cms .. space .. '@param' .. space .. v)
     end
-    insert(contents, cms .. space .. '@param' .. space .. v)
   end
   return contents
 end
@@ -61,7 +63,13 @@ end
 local lang = setmetatable({}, {
   __call = function(_, tbl)
     local cms = gen_anno_cms()
-    local contents = generate_anno_tmp(tbl, cms)
+    local contents
+    local custom_template = coman.custom_template
+    if custom_template[vim.bo.filetype] then
+      contents = custom_template[vim.bo.filetype](tbl,cms)
+    else
+      contents = generate_anno_tmp(tbl, cms)
+    end
     insert_annotation(contents)
   end,
   __index = function(_, ft)

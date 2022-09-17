@@ -1,8 +1,9 @@
 local vim, api = vim, vim.api
 local insert = table.insert
 local coman = {
-  before_anno = false,
+  custom_template = {}
 }
+
 local ts = require('coman.ts')
 
 function coman.split(str, reg)
