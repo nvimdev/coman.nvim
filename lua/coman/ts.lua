@@ -53,10 +53,10 @@ function ts:get_func_with_params()
 
     local name = query.captures[id] -- name of the capture in the query
     local node_srow, node_scol, node_erow, node_ecol = node:range()
-    -- print(node_srow,node_scol,node_erow,node_ecol)
-    -- print("- capture name: " .. name,id)
+    -- print(node_srow, node_scol, node_erow, node_ecol)
+    -- print('- capture name: ' .. name, id)
     local text = get_text(node_srow, node_scol, node_erow, node_ecol)
-    if name == 'function' then
+    if name == 'function' or name == 'method' then
       context['func'] = text
     end
 

@@ -29,7 +29,8 @@ local generate_line_comment = function(line, lnum, ctx)
         api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { ctx.cms .. line })
         return
       else
-        new_lines = line:sub(1, ctx.head_pos) .. ctx.cms .. line:sub(ctx.head_pos + 1)
+        new_lines = line:sub(1, ctx.head_pos) ..
+            ctx.cms .. line:sub(ctx.head_pos + 1)
         api.nvim_buf_set_lines(0, lnum - 1, lnum, true, { new_lines })
         return
       end
